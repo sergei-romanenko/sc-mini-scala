@@ -1,4 +1,4 @@
-# sc-mini: A Minimalistic Supercompiler written in Idris
+# sc-mini: A Minimalistic Supercompiler written in Scala
 
 The goal is to stress the main features of supercompilation for a working 
 functional programmer.
