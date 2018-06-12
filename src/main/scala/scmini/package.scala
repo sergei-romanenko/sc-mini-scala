@@ -14,4 +14,6 @@ package object scmini {
   //type Node[A] = Tree[A]
 
   type Machine[A] = NameSupply => A => Step[A]
+
+  type Msg = String
 }

@@ -8,16 +8,21 @@ case class Var(name: Name) extends Expr {
   override def toString: String = name
 }
 
-case class Ctr(name: Name, args: List[Expr]) extends Expr {
+trait CFG extends Expr {
+  val name: Name
+  val args: List[Expr]
+}
+
+case class Ctr(name: Name, args: List[Expr]) extends CFG {
   override def toString: String =
     if (args.isEmpty) name else name + args.mkString("(", ",", ")")
 }
 
-case class FCall(name: Name, args: List[Expr]) extends Expr {
+case class FCall(name: Name, args: List[Expr]) extends CFG {
   override def toString: String = name + args.mkString("(", ",", ")")
 }
 
-case class GCall(name: Name, args: List[Expr]) extends Expr {
+case class GCall(name: Name, args: List[Expr]) extends CFG {
   override def toString: String = name + args.mkString("(", ",", ")")
 }
 
@@ -50,9 +55,9 @@ case class GDef(name: Name, pat: Pat, params: List[Name], expr: Expr) extends Ru
 
 }
 
-sealed case class Program(fdefs: List[FDef], gdefs: List[GDef]) {
+sealed case class Program(fDefs: List[FDef], gDefs: List[GDef]) {
   override def toString: String = {
-    val rules: List[Rule] = fdefs ::: gdefs
+    val rules: List[Rule] = fDefs ::: gDefs
     rules.mkString("")
   }
 }
