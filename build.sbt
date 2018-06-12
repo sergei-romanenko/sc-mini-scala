@@ -8,6 +8,7 @@ lazy val root = (project in file(".")).
       version      := "0.1.0-SNAPSHOT"
     )),
     name := "sc-mini-scala",
+    libraryDependencies += parser_combinators,
     libraryDependencies += scalactic,
     libraryDependencies += scalaTest % Test,
     scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked"),

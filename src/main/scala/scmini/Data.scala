@@ -4,27 +4,63 @@ package scmini
 
 sealed trait Expr
 
-case class Var(name: Name) extends Expr
+case class Var(name: Name) extends Expr {
+  override def toString: String = name
+}
 
-case class Ctr(name: Name, args: List[Expr]) extends Expr
+case class Ctr(name: Name, args: List[Expr]) extends Expr {
+  override def toString: String =
+    if (args.isEmpty) name else name + args.mkString("(", ",", ")")
+}
 
-case class FCall(name: Name, args: List[Expr]) extends Expr
+case class FCall(name: Name, args: List[Expr]) extends Expr {
+  override def toString: String = name + args.mkString("(", ",", ")")
+}
 
-case class GCall(name: Name, args: List[Expr]) extends Expr
+case class GCall(name: Name, args: List[Expr]) extends Expr {
+  override def toString: String = name + args.mkString("(", ",", ")")
+}
 
-case class Let(binding: (Name, Expr), expr: Expr) extends Expr
+case class Let(binding: (Name, Expr), expr: Expr) extends Expr {
+  override def toString: String = {
+    val (n, e) = binding
+    s"let $n=$e in $expr"
+  }
+}
 
 // Programs & Tasks
 
-sealed case class Pat(name: Name, params: List[Name])
+sealed case class Pat(name: Name, params: List[Name]) {
+  override def toString: String =
+    if (params.isEmpty) name else name + params.mkString("(", ",", ")")
+}
 
-sealed case class GDef(name: Name, pat: Pat, args: List[Name], expr: Expr)
+sealed trait Rule
 
-sealed case class FDef(name: Name, params: List[Name], expr: Expr)
+case class FDef(name: Name, params: List[Name], expr: Expr) extends Rule {
+  override def toString: String =
+    s"$name${params.mkString("(", ",", ")")}=$expr;"
+}
 
-sealed case class Program(fdefs: List[FDef], gdefs: List[GDef])
+case class GDef(name: Name, pat: Pat, params: List[Name], expr: Expr) extends Rule {
+  lazy val allParams: List[Name] = pat.params ::: params
 
-sealed case class Task(expr: Expr, program: Program)
+  override def toString: String =
+    s"$name${(pat :: params).mkString("(", ",", ")")}=$expr;"
+
+}
+
+sealed case class Program(fdefs: List[FDef], gdefs: List[GDef]) {
+  override def toString: String = {
+    val rules: List[Rule] = fdefs ::: gdefs
+    rules.mkString("")
+  }
+}
+
+sealed case class Task(expr: Expr, program: Program) {
+  override def toString: String =
+    s"$expr where $program"
+}
 
 // Contractions
 
