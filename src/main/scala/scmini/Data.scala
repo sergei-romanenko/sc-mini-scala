@@ -8,7 +8,7 @@ case class Var(name: Name) extends Expr {
   override def toString: String = name
 }
 
-trait CFG extends Expr {
+sealed trait CFG extends Expr {
   val name: Name
   val args: List[Expr]
 }
@@ -83,13 +83,13 @@ case class EqTest(eq: Boolean) extends TestResult
 
 sealed trait Step[A]
 
-case class Transient[A](ot: Option[TestResult], a: A) extends Step[A]
-
-case class Variants[A](bs: List[(Contraction, A)]) extends Step[A]
-
 case class Stop[A](a: A) extends Step[A]
 
-case class Decompose[A](f: List[A] => A, as: List[A]) extends Step[A]
+case class Transient[A](ot: Option[TestResult], a: A) extends Step[A]
+
+case class Decompose[A](comp: List[A] => A, as: List[A]) extends Step[A]
+
+case class Variants[A](bs: List[(Contraction, A)]) extends Step[A]
 
 // Edges
 
@@ -97,9 +97,9 @@ sealed trait Edge[A]
 
 case class ETransient[A](ot: Option[TestResult], graph: Graph[A]) extends Edge[A]
 
-case class EVariants[A](variants: List[(Contraction, Graph[A])]) extends Edge[A]
+case class EDecompose[A](comp: List[A] => A, graphs: List[Graph[A]]) extends Edge[A]
 
-case class EDecompose[A](f: List[A] => A, graphs: List[Graph[A]]) extends Edge[A]
+case class EVariants[A](variants: List[(Contraction, Graph[A])]) extends Edge[A]
 
 case class EFold[A](graph: Graph[A], renaming: Renaming) extends Edge[A]
 
