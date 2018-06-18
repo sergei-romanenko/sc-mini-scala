@@ -117,8 +117,14 @@ case class EFold[A](graph: Graph[A], renaming: Renaming) extends Edge[A]
 
 // Graphs
 
-sealed trait Graph[A]
+sealed trait Graph[A] {
+  val label: A
+}
 
-case class Node[A](a: A, edge: Edge[A]) extends Graph[A]
+case class Leaf[A](a: A) extends Graph[A] {
+  override val label: A = a
+}
 
-case class Leaf[A](a: A) extends Graph[A]
+case class Node[A](a: A, edge: Edge[A]) extends Graph[A] {
+  override val label: A = a
+}
