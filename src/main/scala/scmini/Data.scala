@@ -11,18 +11,30 @@ case class Var(name: Name) extends Expr {
 sealed trait CFG extends Expr {
   val name: Name
   val args: List[Expr]
+
+  def copy(args: List[Expr]): CFG
 }
 
 case class Ctr(name: Name, args: List[Expr]) extends CFG {
+  override def copy(args: List[Conf]): Ctr =
+    Ctr(name, args)
+
   override def toString: String =
     if (args.isEmpty) name else name + args.mkString("(", ",", ")")
+
 }
 
 case class FCall(name: Name, args: List[Expr]) extends CFG {
+  override def copy(args: List[Conf]): FCall =
+    FCall(name, args)
+
   override def toString: String = name + args.mkString("(", ",", ")")
 }
 
 case class GCall(name: Name, args: List[Expr]) extends CFG {
+  override def copy(args: List[Conf]): GCall =
+    GCall(name, args)
+
   override def toString: String = name + args.mkString("(", ",", ")")
 }
 
@@ -107,6 +119,6 @@ case class EFold[A](graph: Graph[A], renaming: Renaming) extends Edge[A]
 
 sealed trait Graph[A]
 
-case class Node[A](a: A, edge: Edge[A])
+case class Node[A](a: A, edge: Edge[A]) extends Graph[A]
 
-case class Leaf[A](a: A)
+case class Leaf[A](a: A) extends Graph[A]

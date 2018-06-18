@@ -2,7 +2,7 @@ package object scmini {
 
   type Name = String
   type Renaming = List[(Name, Name)]
-  type NameSupply = List[Name]
+  type NameSupply = Stream[Name]
 
   type Subst = List[(Name, Expr)]
 
