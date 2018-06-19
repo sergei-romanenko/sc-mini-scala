@@ -26,7 +26,7 @@ object Interpreter {
     case GCall(name, Ctr(cname, cargs) :: args) =>
       val GDef(_, pat, params, body) = p.gDef(name, cname)
       val subst = (pat.params ++ params).zip(cargs ++ args)
-      Transient(Some(Match(pat)), body /#/ subst)
+      Transient(Some(pat), body /#/ subst)
     case GCall(name, arg :: args) =>
       evalStep(p)(arg) match {
         case Transient(contr, arg1) =>

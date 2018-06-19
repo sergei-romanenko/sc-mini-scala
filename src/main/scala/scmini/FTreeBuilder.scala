@@ -14,11 +14,11 @@ case class FTreeBuilder(m: Machine[Conf]) {
       m(ns)(e0) match {
         case Stop(e) => Leaf(e)
         case Transient(ot, e) =>
-          Node(e0, ETransient(ot, bft(ns, e)))
+          Branch(e0, ETransient(ot, bft(ns, e)))
         case Decompose(comp, es) =>
-          Node(e0, EDecompose(comp, es.map(bft(ns, _))))
+          Branch(e0, EDecompose(comp, es.map(bft(ns, _))))
         case Variants(bs) =>
-          Node(e0, EVariants(
+          Branch(e0, EVariants(
             for ((c, e) <- bs) yield (c, bft(ns \\ c, e))))
       }
     }

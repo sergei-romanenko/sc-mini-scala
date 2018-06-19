@@ -15,7 +15,7 @@ object Generator {
           graph: Graph[Conf]): (Conf, Program, NameSupply) = graph match {
     case Leaf(e) =>
       (e, Program(Nil, Nil), ns)
-    case Node(e, edge) => edge match {
+    case Branch(e, edge) => edge match {
       case ETransient(_, g) =>
         val vs = e.vNames
         val f1 = "ff" ++ ns.head.substring(1)

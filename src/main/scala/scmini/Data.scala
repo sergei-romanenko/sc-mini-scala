@@ -83,21 +83,13 @@ sealed case class Task(expr: Expr, program: Program) {
 
 sealed case class Contraction(name: Name, pat: Pat)
 
-// Test results
-
-sealed trait TestResult
-
-case class Match(pat: Pat) extends TestResult
-
-case class EqTest(eq: Boolean) extends TestResult
-
 // Steps
 
 sealed trait Step[A]
 
 case class Stop[A](a: A) extends Step[A]
 
-case class Transient[A](ot: Option[TestResult], a: A) extends Step[A]
+case class Transient[A](ot: Option[Pat], a: A) extends Step[A]
 
 case class Decompose[A](comp: List[A] => A, as: List[A]) extends Step[A]
 
@@ -107,7 +99,7 @@ case class Variants[A](bs: List[(Contraction, A)]) extends Step[A]
 
 sealed trait Edge[A]
 
-case class ETransient[A](ot: Option[TestResult], graph: Graph[A]) extends Edge[A]
+case class ETransient[A](ot: Option[Pat], graph: Graph[A]) extends Edge[A]
 
 case class EDecompose[A](comp: List[A] => A, graphs: List[Graph[A]]) extends Edge[A]
 
@@ -125,6 +117,6 @@ case class Leaf[A](a: A) extends Graph[A] {
   override val label: A = a
 }
 
-case class Node[A](a: A, edge: Edge[A]) extends Graph[A] {
+case class Branch[A](a: A, edge: Edge[A]) extends Graph[A] {
   override val label: A = a
 }

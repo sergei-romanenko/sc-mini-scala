@@ -11,7 +11,7 @@ package object scmini {
   type Env = List[(Name, Value)]
 
   type Tree[A] = Graph[A]
-  //type Node[A] = Tree[A]
+  type Node[A] = Tree[A]
 
   type Machine[A] = NameSupply => A => Step[A]
 
