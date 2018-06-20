@@ -1,6 +1,7 @@
 package scmini
 
 import scmini.DataUtil._
+import scmini.Graph._
 
 case class FTreeBuilder(m: Machine[Conf]) {
 
@@ -12,13 +13,13 @@ case class FTreeBuilder(m: Machine[Conf]) {
       bft(ns.tail, generalize(ns.head, e0))
     else {
       m(ns)(e0) match {
-        case Stop(e) => Leaf(e)
+        case Stop(e) => leaf(e)
         case Transient(ot, e) =>
-          Branch(e0, ETransient(ot, bft(ns, e)))
+          branch(e0, ETransient(ot, bft(ns, e)))
         case Decompose(comp, es) =>
-          Branch(e0, EDecompose(comp, es.map(bft(ns, _))))
+          branch(e0, EDecompose(comp, es.map(bft(ns, _))))
         case Variants(bs) =>
-          Branch(e0, EVariants(
+          branch(e0, EVariants(
             for ((c, e) <- bs) yield (c, bft(ns \\ c, e))))
       }
     }

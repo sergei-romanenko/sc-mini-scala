@@ -99,7 +99,7 @@ case class Variants[A](bs: List[(Contraction, A)]) extends Step[A]
 
 sealed trait Edge[A]
 
-case class ETransient[A](ot: Option[Pat], graph: Graph[A]) extends Edge[A]
+case class ETransient[A](opat: Option[Pat], graph: Graph[A]) extends Edge[A]
 
 case class EDecompose[A](comp: List[A] => A, graphs: List[Graph[A]]) extends Edge[A]
 
@@ -113,10 +113,34 @@ sealed trait Graph[A] {
   val label: A
 }
 
-case class Leaf[A](a: A) extends Graph[A] {
-  override val label: A = a
-}
+object Graph {
 
-case class Branch[A](a: A, edge: Edge[A]) extends Graph[A] {
-  override val label: A = a
+  private
+  class Leaf[A](val a: A) extends Graph[A] {
+    override val label: A = a
+  }
+
+  private
+  class Branch[A](val a: A, val edge: () => Edge[A]) extends Graph[A] {
+    override val label: A = a
+  }
+
+  object leaf {
+
+    def apply[A](a: A): Graph[A] = new Leaf(a)
+
+    def unapply[A](arg: Leaf[A]): Option[A] = Some(arg.a)
+  }
+
+  object branch {
+
+    def apply[A](a: A, edge: => Edge[A]): Graph[A] = {
+      lazy val edgeVal = edge
+      new Branch(a, () => edgeVal)
+    }
+
+    def unapply[A](arg: Branch[A]): Option[(A, Edge[A])] =
+      Some(arg.a, arg.edge())
+  }
+
 }
