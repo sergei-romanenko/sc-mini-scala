@@ -3,9 +3,9 @@ package scmini
 import scmini.DataUtil._
 import scmini.Graph._
 
-case class FTreeBuilder(m: Machine[Conf]) {
+sealed case class FTreeBuilder(m: Machine[Conf]) {
 
-  def build(e: Conf): Tree[Conf] =
+  def buildFTree(e: Conf): Tree[Conf] =
     bft(nameSupply, e)
 
   def bft(ns: NameSupply, e0: Conf): Tree[Conf] =
@@ -14,8 +14,8 @@ case class FTreeBuilder(m: Machine[Conf]) {
     else {
       m(ns)(e0) match {
         case Stop(e) => leaf(e)
-        case Transient(ot, e) =>
-          branch(e0, ETransient(ot, bft(ns, e)))
+        case Transient(opat, e) =>
+          branch(e0, ETransient(opat, bft(ns, e)))
         case Decompose(comp, es) =>
           branch(e0, EDecompose(comp, es.map(bft(ns, _))))
         case Variants(bs) =>
@@ -46,4 +46,9 @@ case class FTreeBuilder(m: Machine[Conf]) {
     (w, vs ::: Var(name) :: ws)
   }
 
+}
+
+object FTreeBuilder {
+  def buildFTree(m: Machine[Conf])(e: Conf): Tree[Conf] =
+    FTreeBuilder(m).buildFTree(e)
 }

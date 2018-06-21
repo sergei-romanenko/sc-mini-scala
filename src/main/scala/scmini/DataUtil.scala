@@ -12,6 +12,10 @@ object DataUtil {
     def gDef(name: Name, cname: Name): GDef = {
       p.gDefs.find(gd => gd.name == name && gd.pat.name == cname).get
     }
+
+    def gDefList(name: Name): List[GDef] = {
+      p.gDefs.filter(gd => gd.name == name)
+    }
   }
 
   implicit class ExprImprovements(val e: Expr) {
@@ -42,6 +46,11 @@ object DataUtil {
 
     def vNames: List[Name] =
       e.vmNames.distinct
+
+    def isVar: Boolean = e match {
+      case Var(_) => true
+      case _ => false
+    }
 
     def isFGCall: Boolean = e match {
       case FCall(_, _) => true

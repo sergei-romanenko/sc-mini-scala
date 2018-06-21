@@ -2,26 +2,20 @@ package scmini
 
 import org.scalatest.FunSuite
 
-import SLLParsers.parseTask
-import SLLCheck.checkTask
 import Interpreter.eval
 import SLLSamples._
-
+import TestUtil._
 
 class InterpreterTests extends FunSuite {
 
   def run(e: String, p: String, r: String): Unit = {
-    val t = e + " where " + p
-    val task = parseTask(t)
-    assert(checkTask(task).isEmpty)
+    val task = mkTask(e, p)
     val result = eval(task.program)(task.expr)
     assert(result.toString == r)
   }
 
   def runEx(e: String, p: String, r: String): Unit = {
-    val t = e + " where " + p
-    val task = parseTask(t)
-    assert(checkTask(task).isEmpty)
+    val task = mkTask(e, p)
     val caught =
       intercept[RuntimeException] {
         eval(task.program)(task.expr)

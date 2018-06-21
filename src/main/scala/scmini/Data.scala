@@ -89,7 +89,7 @@ sealed trait Step[A]
 
 case class Stop[A](a: A) extends Step[A]
 
-case class Transient[A](ot: Option[Pat], a: A) extends Step[A]
+case class Transient[A](opat: Option[Pat], a: A) extends Step[A]
 
 case class Decompose[A](comp: List[A] => A, as: List[A]) extends Step[A]
 
