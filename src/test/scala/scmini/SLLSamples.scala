@@ -36,21 +36,21 @@ object SLLSamples {
       | take2(S(y), x) = S(take(x, y));
     """.stripMargin
 
-  val prog2: String =
+  val progKMP: String =
     """
-      | gEqSymb(A(), y) = gEqA(y);
-      | gEqSymb(B(), y) = gEqB(y);
-      | gEqA(A()) = True;  gEqA(B()) = False;
-      | gEqB(A()) = False; gEqB(B()) = True;
-      | gIf(True, x, y) = x;
-      | gIf(False, x, y) = y;
-      | fMatch(p, s) = gM(p, s, p, s);
-      | gM(Nil(), ss, op, os) = True;
-      | gM(Cons(p, pp), ss, op, os) = gX(ss, p, pp, op, os);
-      | gX(Nil(), p, pp,  op, os) = False;
-      | gX(Cons(s, ss), p, pp,  op, os) = gIf(gEqSymb(p, s), gM(pp, ss, op, os), gN(os, op));
-      | gN(Nil(), op) = False;
-      | gN(Cons(s, ss), op) = gM(op, ss, op, ss);
+      | eqSymb(A, y) = eqA(y);
+      | eqSymb(B, y) = eqB(y);
+      | eqA(A) = True;  eqA(B) = False;
+      | eqB(A) = False; eqB(B) = True;
+      | if(True, x, y) = x;
+      | if(False, x, y) = y;
+      | match(p, s) = m(p, s, p, s);
+      | m(Nil, ss, op, os) = True;
+      | m(Cons(p, pp), ss, op, os) = gx(ss, p, pp, op, os);
+      | gx(Nil, p, pp,  op, os) = False;
+      | gx(Cons(s, ss), p, pp,  op, os) = if(eqSymb(p, s), m(pp, ss, op, os), gn(os, op));
+      | gn(Nil, op) = False;
+      | gn(Cons(s, ss), op) = m(op, ss, op, ss);
     """.stripMargin
 
   val prog3: String =

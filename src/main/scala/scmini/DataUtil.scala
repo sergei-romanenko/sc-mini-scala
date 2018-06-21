@@ -18,6 +18,18 @@ object DataUtil {
     }
   }
 
+  def kindEq(e1: CFG, e2: CFG): Boolean = (e1, e2) match {
+    case (Ctr(_, _), Ctr(_, _)) => true
+    case (FCall(_, _), FCall(_, _)) => true
+    case (GCall(_, _), GCall(_, _)) => true
+    case (_, _) => false
+  }
+
+  def shallowEq(e1: CFG, e2: CFG): Boolean =
+    kindEq(e1, e2) &&
+      e1.name == e2.name &&
+      e1.args.length == e2.args.length
+
   implicit class ExprImprovements(val e: Expr) {
     def /#/(subst: Subst): Expr = e match {
       case Var(name) => lookup(name, subst)
@@ -84,16 +96,12 @@ object DataUtil {
   private
   def frn(e1: Expr, e2: Expr): List[Option[(Name, Name)]] =
     (e1, e2) match {
-      case (Ctr(n1, args1), Ctr(n2, args2)) if n1 == n2 =>
-        (args1, args2).zipped.flatMap(frn)
-      case (FCall(n1, args1), FCall(n2, args2)) if n1 == n2 =>
-        (args1, args2).zipped.flatMap(frn)
-      case (GCall(n1, args1), GCall(n2, args2)) if n1 == n2 =>
-        (args1, args2).zipped.flatMap(frn)
+      case (Var(name1), Var(name2)) =>
+        List(Some(name1, name2))
+      case (c1: CFG, c2: CFG) if shallowEq(c1, c2) =>
+        (c1.args, c2.args).zipped.flatMap(frn)
       case (Let((name1, expr1), body1), Let((name2, expr2), body2)) =>
         frn(expr1, expr2) ::: frn(body1, body2 /#/ List((name1, Var(name2))))
       case (_, _) => List(None)
-
     }
-
 }

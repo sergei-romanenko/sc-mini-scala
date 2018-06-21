@@ -69,7 +69,7 @@ object SLLParsers extends RegexParsers with ImplicitConversions {
     }
   }
 
-  // `parseExpr` and `parseProg` are only used for testing purposes.
+  // `parseExpr` is only used for testing purposes.
 
   def parseExpr(s: String): Expr = {
     val rawExpr = runParser(expr, s)

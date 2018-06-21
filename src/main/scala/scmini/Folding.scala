@@ -13,7 +13,7 @@ object Folding {
       case leaf(e) => leaf(e)
       case branch(e, edge) =>
         if (e.isFGCall) {
-          (for (k <- g :: h; Some(r) = findRenaming(k.label, e)) yield (k, r)) match {
+          (for (k <- g :: h; r <- findRenaming(k.label, e)) yield (k, r)) match {
             case Nil =>
               fixTree(tieKnot(g :: h))(t)
             case (k, r) :: _ =>

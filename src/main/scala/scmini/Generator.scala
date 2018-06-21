@@ -40,7 +40,7 @@ object Generator {
           for ((p, b) <- pats zip bodies) yield GDef(g1, p, vs1_, b)
         (gcall, Program(fds, newGds ++ gds), ns1)
       case EFold(base, renaming) =>
-        val baseCall = lookup(base, mp)
+        val baseCall = lookup(base.label, mp)
         val call = baseCall /#/ (for ((x, y) <- renaming) yield (x, Var(y)))
         (call, Program(Nil, Nil), ns)
     }

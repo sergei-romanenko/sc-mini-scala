@@ -2,9 +2,9 @@ package scmini
 
 import org.scalatest.FunSuite
 
+import TestUtil._
 import Interpreter.eval
 import SLLSamples._
-import TestUtil._
 
 class InterpreterTests extends FunSuite {
 
