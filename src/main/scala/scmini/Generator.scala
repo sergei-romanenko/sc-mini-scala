@@ -34,7 +34,7 @@ object Generator {
         val g1 = "gg" ++ ns.head.substring(1)
         val gcall = GCall(g1, vs.map(Var))
         val (bodies, Program(fds, gds), ns1) =
-          resList(ns, (e, gcall) :: mp, cgs.map(_._2))
+          resList(ns.tail, (e, gcall) :: mp, cgs.map(_._2))
         val pats = cgs.map(cg => cg._1.pat)
         val newGds =
           for ((p, b) <- pats zip bodies) yield GDef(g1, p, vs1_, b)

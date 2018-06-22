@@ -5,7 +5,7 @@ import scmini.FTreeBuilder.buildFTree
 import scmini.Folding.foldTree
 import scmini.Generator.residuate
 
-// SLL program transformers
+// SLL program transformer
 
 object Transformer {
 
