@@ -3,7 +3,7 @@ package scmini
 object DataUtil {
 
   def lookup[A, B](key: A, as: List[(A, B)]): B =
-    as.find(_._1 == key).get._2
+    as.find(_._1 == key).map(_._2).get
 
   implicit class ProgramImprovements(p: Program) {
     def fDef(name: Name): FDef =
@@ -32,7 +32,8 @@ object DataUtil {
 
   implicit class ExprImprovements(val e: Expr) {
     def /#/(subst: Subst): Expr = e match {
-      case Var(name) => lookup(name, subst)
+      case Var(name) =>
+        subst.find(_._1 == name).map(_._2).getOrElse(Var(name))
       case call: CFG =>
         call.copy(call.args.map(_ /#/ subst))
       case Let((name, e1), e0) =>

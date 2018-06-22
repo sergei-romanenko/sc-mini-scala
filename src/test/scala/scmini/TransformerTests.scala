@@ -5,6 +5,7 @@ import org.scalatest.FunSuite
 import TestUtil._
 import Transformer.transform
 import Deforester.deforest
+import Supercompiler.supercompile
 import SLLSamples._
 
 class TransformerTests extends FunSuite {
@@ -18,6 +19,12 @@ class TransformerTests extends FunSuite {
   def runD(e: String, p: String, r: String): Unit = {
     val task = mkTask(e, p)
     val result = deforest(task)
+    assert(result.toString == r)
+  }
+
+  def runS(e: String, p: String, r: String): Unit = {
+    val task = mkTask(e, p)
+    val result = supercompile(task)
     assert(result.toString == r)
   }
 
@@ -63,6 +70,11 @@ class TransformerTests extends FunSuite {
         "gg10(Z,v1,x)=gg11(v1,x);gg10(S(v4),v1,x)=ff4(v4,v1,x);" +
         "gg11(Z,x)=True;gg11(S(v4),x)=gg2(x,v4);"
     )
+  }
+
+  ignore(testName = "even(sqr(x)) - supercompiler") {
+    runS("even(sqr(x))", progArith,
+      "") // The result is ugly, because the whistle is too simple.
   }
 
   // KMP
@@ -112,4 +124,18 @@ class TransformerTests extends FunSuite {
     )
   }
 
-}
+  test(testName = "KMP - supercompiler") {
+    runS("match(Cons(A, Cons(A, Cons(B, Nil))), s)", progKMP,
+      "ff1(s) where " +
+        "ff1(s)=gg2(s);" +
+        "ff6(v4)=gg7(v4);" +
+        "gg2(Nil)=False;gg2(Cons(v1,v2))=gg3(v1,v2);" +
+        "gg3(A,v2)=gg4(v2);gg3(B,v2)=ff1(v2);" +
+        "gg4(Nil)=False;gg4(Cons(v3,v4))=gg5(v3,v4);" +
+        "gg5(A,v4)=ff6(v4);gg5(B,v4)=ff1(v4);" +
+        "gg7(Nil)=False;gg7(Cons(v5,v6))=gg8(v5,v6);" +
+        "gg8(A,v6)=ff6(v6);gg8(B,v6)=True;"
+    )
+  }
+
+  }
