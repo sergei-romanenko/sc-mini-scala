@@ -26,5 +26,8 @@ The initial version of **sc-mini**, written in Haskell was described in the
 paper
 
 > Ilya Klyuchnikov. **The ideas and methods of supercompilation.**
-> _Practice of Functional Programming_, 7, 2011. In Russian.
-> <http://fprog.ru/2011/issue7/>
+> _Practice of Functional Programming_, 7, 2011. In Russian.    
+> <http://fprog.ru/2011/issue7/>    
+> <https://github.com/ilya-klyuchnikov/sc-mini>.
+
+This version has been produced by rewriting in Scala the original Haskell version.
