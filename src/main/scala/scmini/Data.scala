@@ -115,31 +115,23 @@ sealed trait Graph[A] {
 
 object Graph {
 
-  private
-  class Leaf[A](val a: A) extends Graph[A] {
+  case class Leaf[A](a: A) extends Graph[A] {
     override val label: A = a
   }
 
   private
-  class Branch[A](val a: A, val edge: () => Edge[A]) extends Graph[A] {
+  class Branch_%[A](val a: A, val edge: () => Edge[A]) extends Graph[A] {
     override val label: A = a
   }
 
-  object leaf {
-
-    def apply[A](a: A): Graph[A] = new Leaf(a)
-
-    def unapply[A](arg: Leaf[A]): Option[A] = Some(arg.a)
-  }
-
-  object branch {
+  object Branch {
 
     def apply[A](a: A, edge: => Edge[A]): Graph[A] = {
       lazy val edgeVal = edge
-      new Branch(a, () => edgeVal)
+      new Branch_%(a, () => edgeVal)
     }
 
-    def unapply[A](arg: Branch[A]): Option[(A, Edge[A])] =
+    def unapply[A](arg: Branch_%[A]): Option[(A, Edge[A])] =
       Some(arg.a, arg.edge())
   }
 

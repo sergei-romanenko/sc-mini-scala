@@ -13,13 +13,13 @@ sealed case class FTreeBuilder(m: Machine[Conf]) {
       bft(ns.tail, generalize(ns.head, e0))
     else {
       m(ns)(e0) match {
-        case Stop(e) => leaf(e)
+        case Stop(e) => Leaf(e)
         case Transient(opat, e) =>
-          branch(e0, ETransient(opat, bft(ns, e)))
+          Branch(e0, ETransient(opat, bft(ns, e)))
         case Decompose(comp, es) =>
-          branch(e0, EDecompose(comp, es.map(bft(ns, _))))
+          Branch(e0, EDecompose(comp, es.map(bft(ns, _))))
         case Variants(bs) =>
-          branch(e0, EVariants(
+          Branch(e0, EVariants(
             for ((c, e) <- bs) yield (c, bft(ns \\ c, e))))
       }
     }

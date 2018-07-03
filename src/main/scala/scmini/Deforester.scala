@@ -4,7 +4,7 @@ import scmini.Driving.driveMachine
 import scmini.FTreeBuilder.buildFTree
 import scmini.Folding.foldTree
 import scmini.Generator.residuate
-import scmini.Graph.{leaf, branch}
+import scmini.Graph.{Leaf, Branch}
 
 object Deforester {
 
@@ -15,21 +15,21 @@ object Deforester {
   }
 
   def simplify(graph: Graph[Conf]): Graph[Conf] = graph match {
-    case branch(e, ETransient(opat, g)) if isBase(e)(g) =>
-      branch(e, ETransient(opat, simplify(g)))
-    case branch(e, ETransient(opat, g)) =>
+    case Branch(e, ETransient(opat, g)) if isBase(e)(g) =>
+      Branch(e, ETransient(opat, simplify(g)))
+    case Branch(e, ETransient(opat, g)) =>
       simplify(g)
-    case branch(e, EDecompose(comp, gs)) =>
-      branch(e, EDecompose(comp, gs.map(simplify)))
-    case branch(e, EVariants(cgs)) =>
-      branch(e, EVariants(cgs.map { case (c1, g1) => (c1, simplify(g1)) }))
+    case Branch(e, EDecompose(comp, gs)) =>
+      Branch(e, EDecompose(comp, gs.map(simplify)))
+    case Branch(e, EVariants(cgs)) =>
+      Branch(e, EVariants(cgs.map { case (c1, g1) => (c1, simplify(g1)) }))
     case _ =>
       graph
   }
 
   def isBase(e: Conf): Graph[Conf] => Boolean = {
-    case leaf(_) => false
-    case branch(_, edge) => edge match {
+    case Leaf(_) => false
+    case Branch(_, edge) => edge match {
       case ETransient(opat, g) =>
         isBase(e)(g)
       case EDecompose(comp, gs) =>

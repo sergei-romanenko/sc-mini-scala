@@ -14,9 +14,9 @@ object Generator {
 
   def res(ns: NameSupply, mp: List[(Conf, Conf)],
           graph: Graph[Conf]): (Conf, Program, NameSupply) = graph match {
-    case leaf(e) =>
+    case Leaf(e) =>
       (e, Program(Nil, Nil), ns)
-    case branch(e, edge) => edge match {
+    case Branch(e, edge) => edge match {
       case ETransient(_, g) =>
         val vs = e.vNames
         val f1 = "ff" ++ ns.head.substring(1)
