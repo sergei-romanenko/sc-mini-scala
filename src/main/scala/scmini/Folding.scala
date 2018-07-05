@@ -26,8 +26,8 @@ object Folding {
   def fixTree[A](f: Node[A] => Tree[A] => Graph[A]): Tree[A] => Graph[A] = {
     case Leaf(a) => Leaf(a)
     case Branch(a, edge) => edge match {
-      case ETransient(opat, graph) =>
-        lazy val l: Graph[A] = Branch(a, ETransient(opat, f(l)(graph)))
+      case ETransient(graph) =>
+        lazy val l: Graph[A] = Branch(a, ETransient(f(l)(graph)))
         l
       case EDecompose(comp, graphs) =>
         lazy val l: Graph[A] = Branch(a, EDecompose(comp, graphs.map(f(l))))

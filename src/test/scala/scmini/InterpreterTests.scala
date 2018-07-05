@@ -1,16 +1,15 @@
 package scmini
 
 import org.scalatest.FunSuite
-
-import TestUtil._
-import Interpreter.eval
-import SLLSamples._
+import scmini.SLLSamples._
+import scmini.TestUtil._
 
 class InterpreterTests extends FunSuite {
+  val maxDepth = 100
 
   def run(e: String, p: String, r: String): Unit = {
     val task = mkTask(e, p)
-    val result = eval(task.program)(task.expr)
+    val result = Interpreter(task.program).eval(maxDepth, task.expr)
     assert(result.toString == r)
   }
 
@@ -18,11 +17,10 @@ class InterpreterTests extends FunSuite {
     val task = mkTask(e, p)
     val caught =
       intercept[RuntimeException] {
-        eval(task.program)(task.expr)
+        Interpreter(task.program).eval(maxDepth, task.expr)
       }
     assert(caught.getMessage == r)
   }
-
 
   // Evaluating ground expressions.
 

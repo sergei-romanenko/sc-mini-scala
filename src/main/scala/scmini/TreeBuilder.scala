@@ -11,8 +11,8 @@ sealed case class TreeBuilder(m: Machine[Conf]) {
   def bt(ns: NameSupply, e0: Conf): Tree[Conf] =
     m(ns)(e0) match {
       case Stop(e) => Leaf(e)
-      case Transient(opat, e) =>
-        Branch(e0, ETransient(opat, bt(ns, e)))
+      case Transient(e) =>
+        Branch(e0, ETransient(bt(ns, e)))
       case Decompose(comp, es) =>
         Branch(e0, EDecompose(comp, es.map(bt(ns, _))))
       case Variants(bs) =>

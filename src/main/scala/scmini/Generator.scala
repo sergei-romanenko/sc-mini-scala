@@ -17,7 +17,7 @@ object Generator {
     case Leaf(e) =>
       (e, Program(Nil, Nil), ns)
     case Branch(e, edge) => edge match {
-      case ETransient(_, g) =>
+      case ETransient(g) =>
         val vs = e.vNames
         val f1 = "ff" ++ ns.head.substring(1)
         val fcall = FCall(f1, vs.map(Var))

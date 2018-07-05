@@ -72,10 +72,12 @@ class TransformerTests extends FunSuite {
     )
   }
 
-  ignore(testName = "even(sqr(x)) - supercompiler") {
-    runS("even(sqr(x))", progArith,
-      "") // The result is ugly, because the whistle is too simple.
-  }
+  /*
+    ignore(testName = "even(sqr(x)) - supercompiler") {
+      runS("even(sqr(x))", progArith,
+        "") // The result is ugly, because the whistle is too simple.
+    }
+  */
 
   // KMP
 
@@ -138,4 +140,4 @@ class TransformerTests extends FunSuite {
     )
   }
 
-  }
+}

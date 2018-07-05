@@ -89,17 +89,39 @@ sealed trait Step[A]
 
 case class Stop[A](a: A) extends Step[A]
 
-case class Transient[A](opat: Option[Pat], a: A) extends Step[A]
+case class Transient[A](a: A) extends Step[A]
 
 case class Decompose[A](comp: List[A] => A, as: List[A]) extends Step[A]
 
 case class Variants[A](bs: List[(Contraction, A)]) extends Step[A]
 
+// Step building
+
+trait StepBuilding[A, B] {
+  def stop(a: A): B
+
+  def transient(a: A): B
+
+  def decompose(comp: List[A] => A, as: List[A]): B
+
+  def variants(bs: List[(Contraction, A)]): B
+}
+
+trait BasicStepBuilding[A] extends StepBuilding[A, Step[A]] {
+  def stop(a: A): Step[A] = Stop(a)
+
+  def transient(a: A): Step[A] = Transient(a)
+
+  def decompose(comp: List[A] => A, as: List[A]): Step[A] = Decompose(comp, as)
+
+  def variants(bs: List[(Contraction, A)]) = Variants(bs)
+}
+
 // Edges
 
 sealed trait Edge[A]
 
-case class ETransient[A](opat: Option[Pat], graph: Graph[A]) extends Edge[A]
+case class ETransient[A](graph: Node[A]) extends Edge[A]
 
 case class EDecompose[A](comp: List[A] => A, graphs: List[Graph[A]]) extends Edge[A]
 

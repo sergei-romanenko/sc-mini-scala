@@ -14,8 +14,8 @@ sealed case class FTreeBuilder(m: Machine[Conf]) {
     else {
       m(ns)(e0) match {
         case Stop(e) => Leaf(e)
-        case Transient(opat, e) =>
-          Branch(e0, ETransient(opat, bft(ns, e)))
+        case Transient(e) =>
+          Branch(e0, ETransient(bft(ns, e)))
         case Decompose(comp, es) =>
           Branch(e0, EDecompose(comp, es.map(bft(ns, _))))
         case Variants(bs) =>

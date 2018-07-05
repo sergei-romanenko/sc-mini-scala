@@ -15,9 +15,9 @@ object Deforester {
   }
 
   def simplify(graph: Graph[Conf]): Graph[Conf] = graph match {
-    case Branch(e, ETransient(opat, g)) if isBase(e)(g) =>
-      Branch(e, ETransient(opat, simplify(g)))
-    case Branch(e, ETransient(opat, g)) =>
+    case Branch(e, ETransient(g)) if isBase(e)(g) =>
+      Branch(e, ETransient(simplify(g)))
+    case Branch(e, ETransient(g)) =>
       simplify(g)
     case Branch(e, EDecompose(comp, gs)) =>
       Branch(e, EDecompose(comp, gs.map(simplify)))
@@ -30,7 +30,7 @@ object Deforester {
   def isBase(e: Conf): Graph[Conf] => Boolean = {
     case Leaf(_) => false
     case Branch(_, edge) => edge match {
-      case ETransient(opat, g) =>
+      case ETransient(g) =>
         isBase(e)(g)
       case EDecompose(comp, gs) =>
         gs.exists(isBase(e))

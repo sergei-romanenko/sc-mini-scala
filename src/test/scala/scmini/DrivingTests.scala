@@ -28,7 +28,7 @@ class DrivingTests extends FunSuite {
 
   test(testName = "odd(S(add(v1, mult(x, S(x)))))") {
     run("odd(S(add(v1, mult(x, S(x)))))", progArith,
-      "Transient(Some(S(x)),even(add(v1,mult(x,S(x)))))")
+      "Transient(even(add(v1,mult(x,S(x)))))")
   }
 
 }
